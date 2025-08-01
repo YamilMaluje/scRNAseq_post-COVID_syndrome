@@ -10,6 +10,7 @@ This repository contains the analysis code and workflows for our study:
 ## 🧠 Overview
 
 Our study reveals a pathway for persistent severe post-COVID syndrome (PCS) involving immune-mediated nasal tissue damage. We show that the TNFα-TGFβ axis drives aberrant differentiation in the nasal epithelium. Targeting this axis may restore epithelial homeostasis and offer a therapeutic strategy for PCS, akin to treatments in other chronic inflammatory conditions.
+This analysis pipeline was primarily developed to process and analyze single-cell RNA-seq data from in vitro air–liquid interface (ALI) cultures. It was specifically used to experimentally validate key findings, and the same scripts can also be applied to analyze single-cell RNA-seq data from patient-derived nasal epithelial samples.
 
 ## 🔗 Data Availability
 
