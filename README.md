@@ -21,7 +21,7 @@ This analysis pipeline was primarily developed to process and analyze single-cel
 
 - Language: **R**
 - Key package: [Seurat](https://satijalab.org/seurat/)
-- Additional tools: Bash scripts for FASTQQC, fastp, pseudoalignment and Differentially Abundance
+- Additional tools: Bash scripts for FASTQC, fastp, pseudoalignment and Differentially Abundance
 
 ## ⚙️ Pipeline Overview
 
