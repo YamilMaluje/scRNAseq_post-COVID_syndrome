@@ -118,10 +118,9 @@ seurat_integration_by_variable <- function(merged_obj,
   merged_obj_split <- FindVariableFeatures(merged_obj_split,nfeatures = 3000)
   merged_obj_split <- ScaleData(merged_obj_split)
   merged_obj_split <- RunPCA(merged_obj_split, npcs = 100, verbose = TRUE)
-  pca_thresh <- pca_contribution_quantification(merged_obj_split,ndims=100, out_path=output.path_results)
-  merged_obj_split <- FindNeighbors(merged_obj_split, dims = 1:pca_thresh, reduction = "pca")
+  merged_obj_split <- FindNeighbors(merged_obj_split, dims = 1:100, reduction = "pca")
   merged_obj_split <- FindClusters(merged_obj_split, resolution = cluster_resolution, algorithm = 4, verbose = TRUE, cluster.name = "unintegrated_clusters")
-  merged_obj_split <- RunUMAP(merged_obj_split, dims = 1:pca_thresh, reduction = "pca", reduction.name = "umap.unintegrated")
+  merged_obj_split <- RunUMAP(merged_obj_split, dims = 1:30, reduction = "pca", reduction.name = "umap.unintegrated")
   
   # visualize by Sample and cell type annotation
   p <- DimPlot(merged_obj_split, reduction = "umap.unintegrated", group.by = c( integration_variable ,"unintegrated_clusters"),label=T, repel = T) +
@@ -145,7 +144,7 @@ seurat_integration_by_variable <- function(merged_obj,
                                                      clu=cluster_resolution,
                                                      split=integration_variable, 
                                                      methods = methods,
-                                                     pca_thresh=pca_thresh)
+                                                     pca_thresh=30)
   
   
   
@@ -184,45 +183,7 @@ save_plot <- function(path=output.path, plot=NULL, plot_name=NULL){
   plot_name <- paste0(paste(plot_name,today,sep = "_"), ".pdf")
   ggsave(filename= plot_name , plot=plot, path=path, width = 14, height = 8, dpi = 300) 
 }
-pca_contribution_quantification <- function(seu_obj,ndims=100, out_path="./"){
-  #1)The point where the principal components only contribute 5% of standard deviation and the principal components cumulatively contribute 90% of the standard deviation.
-  #2)The point where the percent change in variation between the consecutive PCs is less than 0.1%.
-  
-  # Plot the elbow plot
-  el_plot <- ElbowPlot(object = seu_obj, 
-                       ndims = ndims)
-  
-  #1)
-  # Determine percent of variation associated with each PC
-  pct <- seu_obj[["pca"]]@stdev / sum(seu_obj[["pca"]]@stdev) * 100
-  # Calculate cumulative percents for each PC
-  cumu <- cumsum(pct)
-  # Determine which PC exhibits cumulative percent greater than 90% and % variation associated with the PC as less than 5
-  co1 <- which(cumu > 90 & pct < 5)[1]
-  
-  #2)
-  # Determine the difference between variation of PC and subsequent PC
-  co2 <- sort(which((pct[1:length(pct) - 1] - pct[2:length(pct)]) > 0.1), decreasing = T)[1] + 1
-  # last point where change of % of variation is more than 0.1%.
-  
-  
-  #Usually, we would choose the minimum of these two metrics as the PCs covering the majority of the variation in the data
-  # Minimum of the two calculation
-  pcs <- min(co1, co2)
-  
-  
-  #Draw the limiting point of the chosen pca
-  p <- el_plot + 
-    ggtitle(label = "Quantitative Selection of PCA threshold")+
-    geom_vline(xintercept = pcs, linetype = "dashed", color = "red") +
-    #geom_text(aes(x=pcs, label=paste0("\nPCA= ",pcs),y = (max(el_plot$data$stdev)*0.9)), colour="red", angle=90)+
-    annotate("text", x = pcs, y = (max(el_plot$data$stdev)*0.9), label = paste0("\nPCA cutoff= ",pcs),color = "red",angle = 90)
-  
-  save_plot(path =out_path,
-            plot_name = "PCA_Elbow_threshold_cutoff_quantification",plot = p)
-  
-  return(pcs)
-}
+
 ################     FUNCTIONS    ##############################################
 #################    READ SEURAT LIST     ######################################
 #Read seurat object list all samples
