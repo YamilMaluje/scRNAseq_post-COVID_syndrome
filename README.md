@@ -24,7 +24,6 @@ This analysis pipeline was primarily developed to process and analyze single-cel
 - Additional tools: Bash scripts for FASTQC, fastp, pseudoalignment and Differentially Abundance
 
 ## ⚙️ Pipeline Overview
-
 ### Step 1: Quality Control of FASTQ Reads
 bash
 bash scripts/shell/QCFastq.sh
@@ -40,7 +39,10 @@ Import Kallisto quantifications
 
 Filter low-quality cells, normalize data
 
-### Step 4: Downstream Analysis
+### Step 4: Data Integration
+This Step follow the Seurat V5 streamlined (one-line) integrative analysis using IntegrateLayers function. This function conserves the steps from previous version as stated in the Seurat issue #8653
+
+### Step 5: Downstream Analysis
 Main downstream analysis (scRNA_Downstream_analysis_v2.1.R) 
 
 Cell Annotation using canonical markers (Canonical_markers_Seurat_Annotation.R and Canonical_Markers_plots.R)
