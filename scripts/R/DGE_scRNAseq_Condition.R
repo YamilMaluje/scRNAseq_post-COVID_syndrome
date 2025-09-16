@@ -116,7 +116,7 @@ for (comp in comparisons){
                                                             ident.2 = comp, #Reference
                                                             test.use = "MAST",
                                                             assay="RNA",
-                                                            #latent.vars = c("Batch")
+                                                            latent.vars = c("Batch")
   )
   FindMarkersMAST[[paste0(ref,"_vs_",comp)]]$genes <- rownames(FindMarkersMAST[[paste0(ref,"_vs_",comp)]])
 }
